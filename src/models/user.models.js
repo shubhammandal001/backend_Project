@@ -42,20 +42,20 @@ const userSchema = new Schema({
         ],
         password:{
             type: String,  
-            required: [ture,"password is required"]
+            required: [true,"password is required"]
         },
         refreshToken:{
             type:String
         }
     
 
-},{timestamps:ture })
+},{timestamps:true })
 
 // Hook usekiya h:  save hone just phle password ko encrypt kr rhe h..
 userSchema.pre("save", async function(next){
     if (!this.isModified("password")) return next();
 
-    this.password = bcrypt.hash(this.password,10)
+    this.password = await bcrypt.hash(this.password,10)
     next()
 })
 
