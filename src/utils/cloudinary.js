@@ -1,7 +1,20 @@
+// import dotenv from "dotenv";
+// dotenv.config({
+//     path: "./.env"
+// }
+// );
+
+
 import { v2 as cloudinary } from "cloudinary";
 import { log } from "console";
 import { response } from "express";
 import fs from "fs";
+
+//temprory check krne k liye
+// console.log("NAME =", process.env.CLOUDINARY_NAME);
+// console.log("KEY =", process.env.CLOUDINARY_API_KEY);
+// console.log("SECRET =", process.env.CLOUDINARY_API_SECRET);
+// console.log("test_var = ",process.env.TEST_VAR);
 
 
 cloudinary.config({ 
@@ -19,12 +32,15 @@ const uploadOnCloudinary = async (localFilePath) => {
         })
 
     //file has succesfuly uploaded..
-    console.log("successfuly file has uploaded",response.url);
+   // console.log("successfuly file has uploaded on cloudinary",response.url);
+    fs.unlinkSync(localFilePath) 
     return response;
     
     } catch (error) {
-        fs.unlinkSync(localFilePath)  // remove the localy saved temporary file as upload operation got failed .
-        return null;
+       fs.unlinkSync(localFilePath)  // remove the localy saved temporary file as upload operation got failed .
+       return null;
+    //    console.log("cloudinary error => ",error);
+    //    return null;
     }
 } 
 

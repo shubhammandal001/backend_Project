@@ -31,7 +31,6 @@ const userSchema = new Schema({
         },
         coverImage:{
             type: String,  // cloudnary url
-            required: true
         },
         watchHistory:[
             {
@@ -53,10 +52,10 @@ const userSchema = new Schema({
 
 // Hook usekiya h:  save hone just phle password ko encrypt kr rhe h..
 userSchema.pre("save", async function(next){
-    if (!this.isModified("password")) return next();
+    if (!this.isModified("password")) return next;
 
     this.password = await bcrypt.hash(this.password,10)
-    next()
+    next
 })
 
 // password verify kr rhe h ...
