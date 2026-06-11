@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import {asyncHandler} from "../utils/asyncHandler.js";
 import {apiError} from "../utils/apiError.js";
 import {User} from "../models/user.models.js";
@@ -151,9 +152,12 @@ const logoutUser = asyncHandler(async(req,res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set:{
-                refreshToken: undefined
-            }
+           /* $set:{
+                refreshToken: undefined   // phle $set use kiya tha jisme refreshtoken ko undefined rkha tha jisse problem ye ho rhi thi ki db se refresh token remove nhi ho rha tha logout krne k baad bhi .
+            }*/
+           $unset:{
+            refreshToken:1
+           }
         },
         {
             new:true
@@ -183,7 +187,7 @@ const refreshAccessToken = asyncHandler(async(req,res) => {
     }
 
     try {
-        const deCodedToken = Jwt.verify(
+        const deCodedToken = jwt.verify(
             inComingRefreshToken,process.env.REFRESH_TOKEN_SECRET
         )
     
@@ -241,7 +245,9 @@ const changeCurrentPassword = asyncHandler(async(req,res) => {
 const getCurrentUser = asyncHandler(async(req,res) => {
      return res
      .status(200)
-     .json(200, req.user,"current user fetched successfully!")
+     .json(
+        new apiResponse(200, req.user,"current user fetched successfully!")
+     )
 
 })
 
@@ -406,7 +412,7 @@ const getUserChannelProfile = asyncHandler (async(req,res) => {
    return res
    .status(200)
    .json(
-    new apiResponse(404,channel[0],"channel fetched successfully!")
+    new apiResponse(200,channel[0],"channel fetched successfully!")
    )
    
 
